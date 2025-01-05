@@ -21,5 +21,17 @@ namespace API.Controllers
         {
             return context.Clients.OrderByDescending(c => c.Id).ToList();
         }
+
+        [HttpGet("{id}")]
+        public IActionResult GetClient(int id)
+        {
+            var client = context.Clients.Find(id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+                return Ok(client);
+        }
+
     }
 }
