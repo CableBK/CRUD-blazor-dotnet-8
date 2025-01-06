@@ -30,8 +30,35 @@ namespace API.Controllers
             {
                 return NotFound();
             }
-                return Ok(client);
+            return Ok(client);
         }
 
+        [HttpPost]
+        public IActionResult CreateClient(ClientDto clientDto)
+        {
+            var otherClient = context.Clients.FirstOrDefault(c => c.Email == clientDto.Email);
+            if (otherClient != null)
+            {
+                ModelState.AddModelError("Email", "The Email Address is already used");
+                var validation = new ValidationProblemDetails(ModelState);
+                return BadRequest(validation);
+            }
+
+            var client = new Client
+            {
+                FirstName = clientDto.FirstName,
+                LastName = clientDto.LastName,
+                Email = clientDto.Email,
+                Phone = clientDto.Phone ?? "",
+                Status = clientDto.Status,
+                CreateAt = DateTime.Now,
+
+            };
+
+            context.Clients.Add(client);
+            context.SaveChanges();
+
+            return Ok(client);
+        }
     }
 }
