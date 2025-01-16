@@ -89,5 +89,20 @@ namespace API.Controllers
 
             return Ok(client);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult DeleteClient(int id)
+        {
+            var client = context.Clients.Find(id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            context.Clients.Remove(client);
+            context.SaveChanges();
+
+            return Ok();
+        }
     }
 }
