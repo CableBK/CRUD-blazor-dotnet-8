@@ -60,5 +60,11 @@ namespace API.Controllers
 
             return Ok(client);
         }
+
+        [HttpPut("{id}")]
+        public IActionResult EditClient(int id, ClientDto clientDto)
+        {
+            return Ok();
+        }
     }
 }
