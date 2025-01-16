@@ -64,7 +64,30 @@ namespace API.Controllers
         [HttpPut("{id}")]
         public IActionResult EditClient(int id, ClientDto clientDto)
         {
-            return Ok();
+            var otherClient = context.Clients.FirstOrDefault(c => c.Id != id && c.Email == clientDto.Email);
+            if (otherClient != null)
+            {
+                ModelState.AddModelError("Email", "The Email Address is already uesd");
+                var validation = new ValidationProblemDetails(ModelState);
+                return BadRequest(validation);
+            }
+
+            var client = context.Clients.Find(id);
+            if (client == null)
+            {
+                return NotFound();
+            }
+
+            client.FirstName = clientDto.FirstName;
+            client.LastName = clientDto.LastName;
+            client.Email = clientDto.Email;
+            client.Phone = clientDto.Phone ?? "";
+            client.Address = clientDto.Address ?? "";
+            client.Status = clientDto.Status;
+
+            context.SaveChanges();
+
+            return Ok(client);
         }
     }
 }
