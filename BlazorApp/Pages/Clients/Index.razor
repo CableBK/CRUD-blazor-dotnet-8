@@ -1,7 +1,28 @@
 ﻿@page "/Clients"
+@using BlazorApp.Models
+@using static System.Net.WebRequestMethods
+@using System.Net.Http
+@using System.Net.Http.Json
+@using System.Threading.Tasks
 
-<h3>Index</h3>
+@inject HttpClient Http
+
+
+
+<h1 class="text-center mb-3">List of Clients</h1>
+
+<a class="btn btn-primary mb-3" href="/Clients/Create">New Client</a>
+
+@if(clients == null){
+    <p><em>Loading...</em></p>
+}
 
 @code {
 
+    private List<Client>? clients;
+
+    protected override async Task OnInitializedAsync()
+    {
+        clients = await Http.GetFromJsonAsync<List<Client>>("https://localhost:7298/api/clients");
+    }
 }
